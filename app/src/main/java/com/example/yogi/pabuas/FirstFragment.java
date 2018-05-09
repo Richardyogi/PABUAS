@@ -1,7 +1,9 @@
 package com.example.yogi.pabuas;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,16 +27,29 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
     public static FirstFragment newInstance(String title){
         FirstFragment fragment = new FirstFragment();
         Bundle args = new Bundle();
-        args.putString("Game",title);
+        args.putString("title",title);
         fragment.setArguments(args);
         return fragment;
     }
 
+    @SuppressLint("WrongViewCast")
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_ingame,container,false);
         this.btnNewGame = view.findViewById(R.id.btn_newGame);
         this.btnExitGame = view.findViewById(R.id.btn_exit);
+        this.btnNewGame.setOnClickListener(this);
+        this.btnExitGame.setOnClickListener(this);
         return view;
+    }
+
+    public void onAttach(Context context){
+        super.onAttach(context);
+        if(context instanceof FragmentListener){
+            this.fl = (FragmentListener) context;
+        }
+        else{
+            throw new ClassCastException(context.toString() + " must implement FragmentListener");
+        }
     }
     @Override
     public void onClick(View view) {
