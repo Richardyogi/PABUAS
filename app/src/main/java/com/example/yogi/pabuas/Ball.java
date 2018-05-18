@@ -70,11 +70,32 @@ public class Ball {
         return kecepatanY;
     }
 
-    public void resetKecX(){
-        this.kecepatanX=-kecepatanX;
+    public void resetKecX( float width){
+        this.x=width-radius;
+        this.kecepatanX=-(kecepatanX/1.3f);
     }
 
-    public void resetKecY(){
-        this.kecepatanY=-kecepatanY;
+    public void resetKecX2(){
+        this.x=radius;
+        this.kecepatanX=-(kecepatanX/1.3f);
+    }
+
+    public void resetKecY(float height){
+        this.y=height-radius;
+        this.kecepatanY=-(kecepatanY/1.3f);
+    }
+
+    public void resetKecY2(){
+        this.y=radius;
+        this.kecepatanY=-(kecepatanY/1.3f);
+    }
+
+    public boolean validator(Ball otherBall){
+        if(this.x>otherBall.getX()-(radius/2)&&this.x<otherBall.getX()+(radius/2)&&this.y>otherBall.getY()-(radius/2)&&this.y<otherBall.getY()+(radius/2)){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

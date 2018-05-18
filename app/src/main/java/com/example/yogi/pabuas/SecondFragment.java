@@ -108,7 +108,6 @@ public class SecondFragment extends Fragment implements OnClickListener,SensorEv
     public void startTimer(){
         startTime = SystemClock.uptimeMillis();
         handler.postDelayed(runnable, 0);
-
     }
 
     public Runnable runnable = new Runnable() {
@@ -127,8 +126,7 @@ public class SecondFragment extends Fragment implements OnClickListener,SensorEv
 
             milliSeconds = (int) (updateTime % 100);
 
-            tv_waktu.setText("" + seconds + "."
-                    + String.format("%02d", milliSeconds));
+            tv_waktu.setText("" + seconds + "." + String.format("%02d", milliSeconds));
 
             handler.postDelayed(this, 0);
         }
@@ -249,13 +247,17 @@ public class SecondFragment extends Fragment implements OnClickListener,SensorEv
         }
 
 
-        if (ball.getX()+ball.getRadius()>=ivCanvas.getWidth()||ball.getX()-ball.getRadius()<=0){
-            ball.resetKecX();
-            roll=0;
+        if (ball.getX()+ball.getRadius()>=ivCanvas.getWidth()){
+            ball.resetKecX(ivCanvas.getWidth());
         }
-        else if (ball.getY()+ball.getRadius()>=ivCanvas.getHeight()||ball.getY()-ball.getRadius()<=0){
-            ball.resetKecY();
-            pitch=0;
+        else if(ball.getX()-ball.getRadius()<=0){
+            ball.resetKecX2();
+        }
+        else if (ball.getY()+ball.getRadius()>=ivCanvas.getHeight()){
+            ball.resetKecY(ivCanvas.getHeight());
+        }
+        else if(ball.getY()-ball.getRadius()<=0){
+            ball.resetKecY2();
         }
         else{
             pitch=pitch;
@@ -263,6 +265,16 @@ public class SecondFragment extends Fragment implements OnClickListener,SensorEv
         }
 
         this.redrawBola(roll, pitch);
+        if(ball.validator(hole)){
+            timeBuff += millisecondTime;
+            handler.removeCallbacks(runnable);
+            mBitmap = Bitmap.createBitmap(ivCanvas.getWidth(), ivCanvas.getHeight(), Bitmap.Config.ARGB_8888);
+            ivCanvas.setImageBitmap(mBitmap);
+            mCanvas = new Canvas(mBitmap);
+            drawHole();
+            drawBall();
+            ivCanvas.invalidate();
+        }
     }
 
     @Override
