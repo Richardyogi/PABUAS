@@ -19,16 +19,9 @@
         android:text="New Game"
         android:layout_below="@id/tv_judul"
         android:layout_marginTop="190px"
-        android:layout_marginLeft="270px"
+        android:layout_marginLeft="350px"
         android:id="@+id/btn_newGame"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/btn_newGame"
-        android:text="Exit"
-        android:layout_marginTop="140px"
-        android:layout_marginLeft="280px"
-        android:id="@+id/btn_exit"/>
+
 
 </RelativeLayout>

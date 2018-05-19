@@ -17,7 +17,6 @@ import android.widget.Button;
 
 public class FirstFragment extends Fragment implements View.OnClickListener {
     protected Button btnNewGame;
-    protected Button btnExitGame;
     private FragmentListener fl;
 
     public FirstFragment(){
@@ -36,9 +35,7 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_ingame,container,false);
         this.btnNewGame = view.findViewById(R.id.btn_newGame);
-        this.btnExitGame = view.findViewById(R.id.btn_exit);
         this.btnNewGame.setOnClickListener(this);
-        this.btnExitGame.setOnClickListener(this);
         return view;
     }
 
@@ -56,9 +53,6 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
         if(view.getId()==this.btnNewGame.getId()){
             this.fl.changePage(2);
         }
-        else if(view.getId()==this.btnExitGame.getId()){
-            android.os.Process.killProcess(android.os.Process.myPid());
-            System.exit(1);
-        }
+
     }
 }
