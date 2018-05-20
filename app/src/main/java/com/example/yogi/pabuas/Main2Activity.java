@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,12 +14,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 
 public class Main2Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,FragmentListener {
 
     protected FirstFragment fragment1;
     protected SecondFragment fragment2;
+    protected ThirdFragment fragment3;
+    protected FrameLayout frameLayout;
     private android.support.v4.app.FragmentManager fragmentManager;
 
     @Override
@@ -39,10 +43,11 @@ public class Main2Activity extends AppCompatActivity
 
         this.fragment1 = FirstFragment.newInstance("New Fragment 1");
         this.fragment2 = SecondFragment.newInstance("New Fragment 2");
+        this.fragment3 = ThirdFragment.newInstance("New Fragment 3");
         this.fragmentManager = this.getSupportFragmentManager();
 
         FragmentTransaction ft = this.fragmentManager.beginTransaction();
-        ft.add(R.id.fragment_container,this.fragment1).commit();
+        ft.add(R.id.fragment_container,this.fragment1).addToBackStack(null).commit();
     }
 
     @Override
@@ -54,14 +59,6 @@ public class Main2Activity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main2, menu);
-        return true;
-    }
-
 
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -88,27 +85,55 @@ public class Main2Activity extends AppCompatActivity
     public void changePage(int page) {
         FragmentTransaction ft = this.fragmentManager.beginTransaction();
         if(page==1){
+            if(this.fragment2.isAdded()){
+                ft.remove(this.fragment2);
+            }
+            if(this.fragment3.isAdded()){
+                ft.remove(this.fragment3);
+            }
             if(this.fragment1.isAdded()){
                 ft.show(this.fragment1);
             }
-            else{
-                ft.add(R.id.fragment_container,this.fragment1);
+            else if(!this.fragment1.isAdded()){
+                ft.replace(R.id.fragment_container,this.fragment1);
+            }
+
+        }
+        else if(page==2){
+            if(this.fragment1.isAdded()){
+                ft.remove(this.fragment1);
+            }
+//            if(this.fragment3.isAdded()){
+//                ft.hide(this.fragment3);
+//            }
+            if(this.fragment2.isAdded()){
+                ft.show(this.fragment2);
+            }
+            else if (!this.fragment2.isAdded()){
+                ft.replace(R.id.fragment_container,this.fragment2).addToBackStack(null);
+            }
+
+        }
+        else if(page==3){
+            if(this.fragment1.isAdded()){
+                ft.hide(this.fragment1);
             }
             if(this.fragment2.isAdded()){
                 ft.hide(this.fragment2);
             }
-        }
-        else if(page==2){
-            if(this.fragment2.isAdded()){
-                ft.show(this.fragment2);
+            if(this.fragment3.isAdded()){
+                ft.show(this.fragment3);
             }
-            else{
-                ft.add(R.id.fragment_container,this.fragment2).addToBackStack(null);
+            else if(!this.fragment3.isAdded()){
+                ft.replace(R.id.fragment_container,this.fragment3);
             }
-            if(this.fragment1.isAdded()){
-                ft.hide(this.fragment1);
-            }
+
+            Bundle args = new Bundle();
+            args.putString("value",fragment2.hasilWaktu);
+            this.fragment2.setArguments(args);
+
         }
         ft.commit();
     }
+
 }

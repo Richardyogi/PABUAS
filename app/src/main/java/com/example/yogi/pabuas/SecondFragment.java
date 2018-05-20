@@ -1,5 +1,7 @@
 package com.example.yogi.pabuas;
 
+import android.content.Context;
+import android.content.Intent;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.os.Handler;
@@ -15,7 +17,11 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ListFragment;
 import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -24,6 +30,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,14 +47,16 @@ import static android.content.Context.WINDOW_SERVICE;
 
 public class SecondFragment extends Fragment implements OnClickListener,SensorEventListener {
     private ImageView ivCanvas;
+    private Button btnTidakKelihatan;
     private Bitmap mBitmap;
     private Canvas mCanvas;
-    private ImageView ivPause;
+    private FragmentListener fl;
 
     Handler handler;
     TextView tv_waktu;
     private int minutes, seconds, milliSeconds;
     private long millisecondTime, startTime, timeBuff, updateTime = 0L;
+    public String hasilWaktu;
 
     Ball ball,hole;
     private SensorManager mSensorManager;
@@ -79,6 +88,9 @@ public class SecondFragment extends Fragment implements OnClickListener,SensorEv
 
         this.tv_waktu = view.findViewById(R.id.tv_score);
         this.ivCanvas = view.findViewById(R.id.iv_canvas);
+        this.btnTidakKelihatan = view.findViewById(R.id.btn_tidakKelihatan);
+
+        this.btnTidakKelihatan.setOnClickListener(this);
 
         this.handler = new Handler();
         this.startTimer();
@@ -194,7 +206,7 @@ public class SecondFragment extends Fragment implements OnClickListener,SensorEv
 
     @Override
     public void onClick(View view) {
-
+        this.fl.changePage(3);
     }
 
     @Override
@@ -268,18 +280,25 @@ public class SecondFragment extends Fragment implements OnClickListener,SensorEv
         if(ball.validator(hole)){
             timeBuff += millisecondTime;
             handler.removeCallbacks(runnable);
-            mBitmap = Bitmap.createBitmap(ivCanvas.getWidth(), ivCanvas.getHeight(), Bitmap.Config.ARGB_8888);
-            ivCanvas.setImageBitmap(mBitmap);
-            mCanvas = new Canvas(mBitmap);
-            drawHole();
-            drawBall();
-            ivCanvas.invalidate();
+            this.hasilWaktu = this.tv_waktu.getText().toString();
+
+            fl.changePage(3);
         }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
 
+    }
+
+    public void onAttach(Context context){
+        super.onAttach(context);
+        if(context instanceof FragmentListener){
+            this.fl = (FragmentListener) context;
+        }
+        else{
+            throw new ClassCastException(context.toString() + " must implement FragmentListener");
+        }
     }
 
 }

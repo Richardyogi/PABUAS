@@ -6,4 +6,6 @@ package com.example.yogi.pabuas;
 
 public interface FragmentListener {
     void changePage(int page);
+
+
 }
